@@ -139,7 +139,7 @@ export const RegisterPage = () => {
               margin="normal"
               id="password2"
               name="password2"
-              label="Password"
+              label="Password Again"
               type="password"
               value={formik.values.password2}
               onChange={formik.handleChange}

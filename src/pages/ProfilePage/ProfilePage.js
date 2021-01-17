@@ -5,10 +5,6 @@ import { username, email, password } from "../../utils/validations";
 import TextField from "@material-ui/core/TextField";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
@@ -16,13 +12,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 
-import { postData } from "../../services/postData";
-
+import axios from "axios";
 const validationSchema = yup.object({
   username,
-  email,
-  password,
-  password2: password,
+  first_name: "",
+  last_name: "",
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -64,17 +58,23 @@ export const ProfilePage = () => {
   const formik = useFormik({
     initialValues: {
       username: "",
-      email: "",
-      password: "",
-      password2: "",
+      first_name: "",
+      last_name: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       console.log("values", values);
       try {
-        const result = await postData(
-          "https://clarusway-blogapp.herokuapp.com/api/user/register/",
-          values
+        const result = await axios.put(
+          "https://clarusway-blogapp.herokuapp.com/dj-rest-auth/user/",
+          values,
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: "Token " + localStorage.getItem("token"),
+            },
+          }
         );
         console.log(result?.data);
       } catch ({ response }) {
@@ -112,25 +112,28 @@ export const ProfilePage = () => {
             <TextField
               fullWidth
               margin="normal"
-              id="email"
-              name="email"
-              label="Email"
-              value={formik.values.email}
+              id="first_name"
+              name="first_name"
+              label="First Name"
+              value={formik.values.first_name}
               onChange={formik.handleChange}
-              error={formik.touched.email && Boolean(formik.errors.email)}
-              helperText={formik.touched.email && formik.errors.email}
+              error={
+                formik.touched.first_name && Boolean(formik.errors.first_name)
+              }
+              helperText={formik.touched.first_name && formik.errors.first_name}
             />
             <TextField
               fullWidth
               margin="normal"
-              id="password"
-              name="password"
-              label="Password"
-              type="password"
-              value={formik.values.password}
+              id="last_name"
+              name="last_name"
+              label="Last Name"
+              value={formik.values.last_name}
               onChange={formik.handleChange}
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={formik.touched.password && formik.errors.password}
+              error={
+                formik.touched.last_name && Boolean(formik.errors.last_name)
+              }
+              helperText={formik.touched.last_name && formik.errors.last_name}
             />
             <Button
               color="primary"
